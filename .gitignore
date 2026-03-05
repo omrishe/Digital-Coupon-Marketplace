@@ -1,0 +1,32 @@
+node_modules
+.DS_Store
+dist
+dist-ssr
+*.local
+cert/
+*.pem
+*.key
+localhost*
+README.MD
+template.yaml
+
+# env files Secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# OS
+Thumbs.db
+
+# Temp / generated files
+migration_output.txt
+apply_instructions.json
+pgdata/
+
+# IDE
+.vscode/
+.idea/
