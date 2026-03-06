@@ -14,18 +14,18 @@
 
 ## 3. Core Business Logic (Product Management)
 
-- [ ] 3.1 Implement service to strictly calculate `minimum_sell_price`
-- [ ] 3.2 Implement coupon purchase logic with atomic update and status check
-- [ ] 3.3 Add unit tests for `minimum_sell_price` calculation
+- [x] 3.1 Implement service to strictly calculate `minimum_sell_price`
+- [x] 3.2 Implement coupon purchase logic with atomic update and status check
+- [x] 3.3 Add unit tests for `minimum_sell_price` calculation
 
 ## 4. Admin API
 
-- [ ] 4.1 Implement basic Admin Authentication middleware (ensure passwords are hashed with bcrypt before saving)
-- [ ] 4.2 Create `POST /admin/products` endpoint for creating products/coupons
-- [ ] 4.3 Create `GET /admin/products` endpoint with full details (Implement Pagination)
-- [ ] 4.4 Create `PUT /admin/products/:id` endpoint for updates
-- [ ] 4.5 Create `DELETE /admin/products/:id` endpoint
-- [ ] 4.6 Write integration tests for Admin API endpoints
+- [x] 4.1 Implement basic Admin Authentication middleware (ensure passwords are hashed with bcrypt before saving)
+- [x] 4.2 Create `POST /admin/products` endpoint for creating products/coupons
+- [x] 4.3 Create `GET /admin/products` endpoint with full details (Implement Pagination)
+- [x] 4.4 Create `PUT /admin/products/:id` endpoint for updates
+- [x] 4.5 Create `DELETE /admin/products/:id` endpoint
+- [x] 4.6 Write integration tests for Admin API endpoints
 
 ## 5. Reseller API
 
@@ -34,7 +34,7 @@
 - [ ] 5.3 Create `GET /api/v1/products/:id` endpoint
 - [ ] 5.4 Create `POST /api/v1/products/:id/purchase` endpoint enforcing price validation and atomic locks
 - [ ] 5.5 Validate that the `/purchase` endpoint logs a record into the `purchases` table upon success
-- [ ] 5.6 Create shared error handling middleware adhering to standard API response format
+- [x] 5.6 Create shared error handling middleware adhering to standard API response format
 - [ ] 5.6 Write integration tests for Reseller API endpoints
 
 ## 6. Minimal Frontend
