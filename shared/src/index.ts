@@ -1,7 +1,7 @@
 // ─── Common ───────────────────────────────────────────────────────────────────
 
 /**
- * Standard error response shape — ALL API errors must use this format.
+ * Standard error response shape ALL API errors must use this format.
  * Spec: { "error_code": "ERROR_NAME", "message": "Human readable message" }
  */
 export interface ApiErrorResponse {
@@ -16,7 +16,8 @@ export type ApiErrorCode =
   | 'RESELLER_PRICE_TOO_LOW'
   | 'UNAUTHORIZED'
   | 'VALIDATION_ERROR'
-  | 'INTERNAL_ERROR';
+  | 'INTERNAL_ERROR'
+  | 'USER_ALREADY_EXISTS';
 
 export interface PaginatedResponse<T> {
   data: T[];
