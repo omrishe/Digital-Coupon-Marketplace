@@ -17,7 +17,7 @@ export async function runSeed() {
   if (adminCount === 0 && userCount === 0 && couponCount === 0) {
     console.log('Database is empty. Seeding...');
 
-    const defaultPassword = process.env.Default_Password;
+    const defaultPassword = process.env.Default_Password || '0000';
     if (!defaultPassword) {
       console.error('ERROR: Default_Password is not defined for seeding');
       return;
