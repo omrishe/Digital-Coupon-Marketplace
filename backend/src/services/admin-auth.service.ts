@@ -5,6 +5,9 @@ import { Admin } from '../entities/Admin';
 
 const SALT_ROUNDS = 12;
 const JWT_SECRET = process.env.JWT_SECRET || '';
+if (!JWT_SECRET) {
+  console.error('CRITICAL ERROR: JWT_SECRET is not defined in environment variables');
+}
 const JWT_EXPIRY = '8h';
 
 export type AuthResult =
@@ -28,7 +31,7 @@ export async function registerAdmin(
   const admin = repo.create({ username, password_hash });
   await repo.save(admin);
 
-  const token = jwt.sign({ admin_id: admin.id, username: admin.username }, JWT_SECRET, {
+  const token = jwt.sign({ id: admin.id, username: admin.username }, JWT_SECRET, {
     expiresIn: JWT_EXPIRY,
   });
   return { success: true, token };
@@ -52,7 +55,7 @@ export async function loginAdmin(
     return { success: false, error: 'INVALID_PASSWORD' };
   }
 
-  const token = jwt.sign({ admin_id: admin.id, username: admin.username }, JWT_SECRET, {
+  const token = jwt.sign({ id: admin.id, username: admin.username }, JWT_SECRET, {
     expiresIn: JWT_EXPIRY,
   });
   return { success: true, token };

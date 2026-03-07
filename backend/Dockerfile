@@ -2,14 +2,23 @@ FROM node:22-alpine AS builder
 
 WORKDIR /usr/src/app
 
+# Copy root package.json and tsconfig
 COPY package*.json ./
-COPY backend/package*.json ./backend/
+COPY tsconfig*.json ./
 
-RUN npm install -w backend
+# Copy shared and backend workspaces for dependencies
+COPY shared/package.json ./shared/
+COPY backend/package.json ./backend/
 
-COPY . .
+# Install dependencies for the whole workspace
+RUN npm install
 
-# Assuming a build script exists, e.g., "build": "tsc" in backend/package.json
+# Copy source code
+COPY shared/ ./shared/
+COPY backend/ ./backend/
+
+# Build shared first, then backend
+RUN npm run build -w shared
 RUN npm run build -w backend
 
 FROM node:22-alpine AS production
@@ -17,10 +26,13 @@ FROM node:22-alpine AS production
 WORKDIR /usr/src/app
 
 COPY package*.json ./
-COPY backend/package*.json ./backend/
+COPY shared/package.json ./shared/
+COPY backend/package.json ./backend/
 
-RUN npm install -w backend --only=production
+# Install only production dependencies
+RUN npm install --omit=dev
 
+COPY --from=builder /usr/src/app/shared/dist ./shared/dist
 COPY --from=builder /usr/src/app/backend/dist ./backend/dist
 
 EXPOSE 3000

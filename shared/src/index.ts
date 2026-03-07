@@ -111,3 +111,20 @@ export interface ResellerJwtPayload {
   iat?: number;
   exp?: number;
 }
+
+/**
+ * Generic success response for simple operations (e.g., Logout, Register).
+ */
+export interface ApiResponse {
+  success: boolean;
+  message: string;
+}
+
+/**
+ * Response for authentication checks (/admin/auth/me or /store/auth/me).
+ */
+export interface AuthMeResponse {
+  authenticated: boolean;
+  adminId?: string;
+  userId?: string;
+}
