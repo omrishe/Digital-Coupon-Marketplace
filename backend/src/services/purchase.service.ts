@@ -8,8 +8,8 @@ export type PurchaseParams = {
   channel: PurchaseChannel;
   /** The price submitted by the buyer */
   buyerPrice: number;
-  /** Reseller ID extracted from JWT — null for direct customers */
-  resellerId: string | null;
+  /** Reseller ID extracted from JWT — undefined for direct customers */
+  resellerId?: string;
 };
 
 export type PurchaseError =

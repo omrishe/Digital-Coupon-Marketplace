@@ -29,21 +29,21 @@
 
 ## 5. Reseller API
 
-- [ ] 5.1 Implement Reseller Bearer Token Authentication middleware (ensure JWT payload includes the reseller ID)
-- [ ] 5.2 Create `GET /api/v1/products` endpoint (filtering out sold, hiding sensitive data, implementing Pagination)
-- [ ] 5.3 Create `GET /api/v1/products/:id` endpoint
-- [ ] 5.4 Create `POST /api/v1/products/:id/purchase` endpoint enforcing price validation and atomic locks
-- [ ] 5.5 Validate that the `/purchase` endpoint logs a record into the `purchases` table upon success
+- [x] 5.1 Implement Reseller Bearer Token Authentication middleware (ensure JWT payload includes the reseller ID)
+- [x] 5.2 Create `GET /api/v1/products` endpoint (filtering out sold, hiding sensitive data, implementing Pagination)
+- [x] 5.3 Create `GET /api/v1/products/:id` endpoint
+- [x] 5.4 Create `POST /api/v1/products/:id/purchase` endpoint enforcing price validation and atomic locks
+- [x] 5.5 Validate that the `/purchase` endpoint logs a record into the `purchases` table upon success
 - [x] 5.6 Create shared error handling middleware adhering to standard API response format
-- [ ] 5.6 Write integration tests for Reseller API endpoints
+- [x] 5.6 Write integration tests for Reseller API endpoints
 
 ## 6. Minimal Frontend
 
-- [ ] 6.1 Setup a lightweight Vite + React (or plain HTML/JS) frontend project
-- [ ] 6.2 Build 'Admin Mode' UI (Product creation form, list view)
-- [ ] 6.3 Build 'Customer Mode' UI (Available products grid, purchase button)
-- [ ] 6.4 Integrate frontend with the backend REST API
-- [ ] 6.5 Dockerize frontend via Nginx or serve statically from the backend
+- [x] 6.1 Setup a lightweight Vite + React (or plain HTML/JS) frontend project
+- [x] 6.2 Build 'Admin Mode' UI (Product creation form, list view)
+- [x] 6.3 Build 'Customer Mode' UI (Available products grid, purchase button)
+- [x] 6.4 Integrate frontend with the backend REST API
+- [x] 6.5 Dockerize frontend via Nginx or serve statically from the backend
 
 ## 7. Final Polish
 

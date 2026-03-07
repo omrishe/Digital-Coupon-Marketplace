@@ -32,7 +32,7 @@ export function calculateMinimumSellPrice(costPrice: number, marginPercentage: n
 export function applyMinimumSellPrice(coupon: Partial<Coupon>): Partial<Coupon> {
   const cost = Number(coupon.cost_price);
   const margin = Number(coupon.margin_percentage);
-
+  //NaN checks are duplicated for future proof(if one day we will use the function for other stuff)
   if (Number.isNaN(cost)) {
     throw new Error('cost_price is required and must be a valid number');
   }

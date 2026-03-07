@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { ApiResponse, AuthMeResponse } from '@repo/shared';
 import { AppDataSource } from '../data-source';
-import { registerAdmin, loginAdmin } from '../services/admin-auth.service';
+import { registerUser, loginUser } from '../services/user-auth.service';
 import { AppError } from '../utils/AppError';
 import { catchAsync } from '../utils/catchAsync';
 
@@ -14,37 +14,32 @@ const COOKIE_OPTIONS = {
   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
 };
 
-/** POST /admin/auth/register, create the first admin account */
+/** POST /api/v1/store/auth/register — create a new customer account */
 router.post(
   '/register',
   catchAsync(async (req: Request, res: Response): Promise<void> => {
-    const adminSecret = req.headers['x-admin-secret'];
-    if (!process.env.ADMIN_SECRET_KEY || adminSecret !== process.env.ADMIN_SECRET_KEY) {
-      throw new AppError(401, 'UNAUTHORIZED', 'Invalid or missing admin registration secret');
-    }
-
     const { username, password } = req.body as { username: string; password: string };
 
     if (!username || !password) {
       throw new AppError(400, 'VALIDATION_ERROR', 'username and password are required');
     }
 
-    const result = await registerAdmin(AppDataSource, username, password);
+    const result = await registerUser(AppDataSource, username, password);
 
-    if (!result.success) {
+    if (!result.success || !result.token) {
       if (result.error === 'USER_ALREADY_EXISTS') {
         throw new AppError(409, 'USER_ALREADY_EXISTS', 'Username already taken');
       }
       throw new AppError(400, 'VALIDATION_ERROR', 'Registration failed');
     }
 
-    res.cookie('adminToken', result.token, COOKIE_OPTIONS);
-    const response: ApiResponse = { success: true, message: 'Admin registered successfully' };
+    res.cookie('userToken', result.token, COOKIE_OPTIONS);
+    const response: ApiResponse = { success: true, message: 'Registration successful' };
     res.status(201).json(response);
   }),
 );
 
-/** POST /admin/auth/login, get a JWT for an existing admin */
+/** POST /api/v1/store/auth/login — authenticate customer */
 router.post(
   '/login',
   catchAsync(async (req: Request, res: Response): Promise<void> => {
@@ -54,35 +49,36 @@ router.post(
       throw new AppError(400, 'VALIDATION_ERROR', 'username and password are required');
     }
 
-    const result = await loginAdmin(AppDataSource, username, password);
+    const result = await loginUser(AppDataSource, username, password);
 
-    if (!result.success) {
+    if (!result.success || !result.token) {
       throw new AppError(401, 'UNAUTHORIZED', 'Invalid credentials');
     }
 
-    res.cookie('adminToken', result.token, COOKIE_OPTIONS);
-    const response: ApiResponse = { success: true, message: 'Admin login successful' };
+    res.cookie('userToken', result.token, COOKIE_OPTIONS);
+    const response: ApiResponse = { success: true, message: 'Login successful' };
     res.json(response);
   }),
 );
 
-/** POST /admin/auth/logout — clear cookie */
+/** POST /api/v1/store/auth/logout — clear cookie */
 router.post(
   '/logout',
   catchAsync(async (req: Request, res: Response): Promise<void> => {
-    res.clearCookie('adminToken', COOKIE_OPTIONS);
+    res.clearCookie('userToken', COOKIE_OPTIONS);
     const response: ApiResponse = { success: true, message: 'Logged out successfully' };
     res.json(response);
   }),
 );
 
-/** GET /admin/auth/me — check authentication */
-import { requireAdminAuth } from '../middleware/requireAdminAuth';
+/** GET /api/v1/store/auth/me — check authentication */
+import { requireUserToken } from '../middleware/requireUserToken';
 router.get(
   '/me',
-  requireAdminAuth,
+  requireUserToken,
   catchAsync(async (req: Request, res: Response): Promise<void> => {
-    const response: AuthMeResponse = { authenticated: true, adminId: req.admin?.id };
+    // If requireUserToken passes, the user is authenticated.
+    const response: AuthMeResponse = { authenticated: true, userId: req.user?.id };
     res.json(response);
   }),
 );
