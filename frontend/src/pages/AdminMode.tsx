@@ -9,6 +9,7 @@ const AdminMode: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -53,16 +54,24 @@ const AdminMode: React.FC = () => {
     }
   };
 
-  const handleCreate = async (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setLoading(true);
-      await AdminApi.createProduct({
+      const payload = {
         ...formData,
         cost_price: Number(formData.cost_price),
         margin_percentage: Number(formData.margin_percentage),
-      });
+      };
+
+      if (editingId) {
+        await AdminApi.updateProduct(editingId, payload);
+      } else {
+        await AdminApi.createProduct(payload);
+      }
+
       setShowForm(false);
+      setEditingId(null);
       setFormData({
         ...formData,
         name: '',
@@ -70,10 +79,12 @@ const AdminMode: React.FC = () => {
         value: '',
         cost_price: '',
         margin_percentage: '',
+        image_url:
+          'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=400',
       });
       await loadProducts();
     } catch (err: any) {
-      alert(`Failed to create: ${err.message}`);
+      alert(`Failed to save: ${err.message}`);
       setLoading(false);
     }
   };
@@ -102,7 +113,28 @@ const AdminMode: React.FC = () => {
           <button className="btn btn-outline" onClick={loadProducts}>
             <RefreshCcwIcon size={18} /> Refresh
           </button>
-          <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              if (showForm) {
+                setShowForm(false);
+                setEditingId(null);
+              } else {
+                setFormData({
+                  name: '',
+                  description: '',
+                  image_url:
+                    'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=400',
+                  cost_price: '',
+                  margin_percentage: '',
+                  value_type: 'STRING',
+                  value: '',
+                  type: 'coupon',
+                });
+                setShowForm(true);
+              }
+            }}
+          >
             <PlusIcon size={18} /> {showForm ? 'Cancel' : 'New Product'}
           </button>
         </div>
@@ -124,9 +156,11 @@ const AdminMode: React.FC = () => {
 
       {showForm && (
         <div className="glass-card" style={{ padding: '2rem', marginBottom: '2rem' }}>
-          <h2 style={{ marginBottom: '1.5rem' }}>Create New Coupon</h2>
+          <h2 style={{ marginBottom: '1.5rem' }}>
+            {editingId ? 'Edit Coupon' : 'Create New Coupon'}
+          </h2>
           <form
-            onSubmit={handleCreate}
+            onSubmit={handleSave}
             style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}
           >
             <div className="form-group" style={{ gridColumn: '1 / -1' }}>
@@ -149,6 +183,17 @@ const AdminMode: React.FC = () => {
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 required
                 rows={3}
+              />
+            </div>
+
+            <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+              <label className="form-label">Image URL</label>
+              <input
+                type="url"
+                className="form-control"
+                value={formData.image_url}
+                onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                required
               />
             </div>
 
@@ -197,11 +242,18 @@ const AdminMode: React.FC = () => {
                 marginTop: '1rem',
               }}
             >
-              <button type="button" className="btn btn-outline" onClick={() => setShowForm(false)}>
+              <button
+                type="button"
+                className="btn btn-outline"
+                onClick={() => {
+                  setShowForm(false);
+                  setEditingId(null);
+                }}
+              >
                 Cancel
               </button>
               <button type="submit" className="btn btn-primary" disabled={loading}>
-                Create Product
+                {editingId ? 'Save Changes' : 'Create Product'}
               </button>
             </div>
           </form>
@@ -272,6 +324,7 @@ const AdminMode: React.FC = () => {
                 >
                   Date
                 </th>
+                <th style={{ padding: '1rem 1.5rem' }}></th>
               </tr>
             </thead>
             <tbody>
@@ -342,6 +395,28 @@ const AdminMode: React.FC = () => {
                       }}
                     >
                       {new Date(p.created_at).toLocaleDateString()}
+                    </td>
+                    <td style={{ padding: '1rem 1.5rem', textAlign: 'right' }}>
+                      <button
+                        className="btn btn-outline"
+                        style={{ padding: '0.25rem 0.5rem', fontSize: '0.85rem' }}
+                        onClick={() => {
+                          setFormData({
+                            name: p.name,
+                            description: p.description,
+                            image_url: p.image_url || '',
+                            cost_price: p.cost_price.toString(),
+                            margin_percentage: p.margin_percentage.toString(),
+                            value_type: p.value_type || 'STRING',
+                            value: p.value || '',
+                            type: p.type || 'coupon',
+                          });
+                          setEditingId(p.id);
+                          setShowForm(true);
+                        }}
+                      >
+                        Edit
+                      </button>
                     </td>
                   </tr>
                 ))

@@ -47,6 +47,6 @@
 
 ## 7. Final Polish
 
-- [ ] 7.1 Verify full system startup via docker-compose
-- [ ] 7.2 Run through all frontend flows ensuring backend rules are enforced
-- [ ] 7.3 Write comprehensive README.md with startup instructions and API docs
+- [x] 7.1 Verify full system startup via docker-compose
+- [x] 7.2 Run through all frontend flows ensuring backend rules are enforced
+- [x] 7.3 Write comprehensive README.md with startup instructions and API docs

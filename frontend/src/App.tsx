@@ -124,7 +124,10 @@ const App: React.FC = () => {
         <div className="container">
           <Routes>
             <Route path="/" element={<LandingPage isAuthenticatedUser={isAuthenticatedUser} />} />
-            <Route path="/auth" element={<CustomerAuth />} />
+            <Route
+              path="/auth"
+              element={<CustomerAuth setIsAuthenticatedUser={setIsAuthenticatedUser} />}
+            />
             <Route path="/admin/login" element={<Login />} />
             <Route path="/admin" element={<AdminMode />} />
           </Routes>

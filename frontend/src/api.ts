@@ -134,4 +134,14 @@ export const AdminApi = {
     });
     return handleResponse<AdminProduct>(res);
   },
+
+  /** Update an existing product/coupon */
+  updateProduct: async (id: string, productData: any) => {
+    const res = await fetchWithCredentials(`${ADMIN_BASE}/products/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(productData),
+    });
+    return handleResponse<AdminProduct>(res);
+  },
 };

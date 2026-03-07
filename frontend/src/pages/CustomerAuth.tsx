@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CustomerApi } from '../api';
 
-const CustomerAuth: React.FC = () => {
+const CustomerAuth: React.FC<{ setIsAuthenticatedUser: (v: boolean) => void }> = ({
+  setIsAuthenticatedUser,
+}) => {
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -21,6 +23,7 @@ const CustomerAuth: React.FC = () => {
       } else {
         await CustomerApi.register(username, password);
       }
+      setIsAuthenticatedUser(true);
       navigate('/');
     } catch (err: any) {
       setError(err.message || 'Authentication failed');
